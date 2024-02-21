@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Sudoku</string>
+    <string name="errors">Ошибки:</string>
+    <string name="expert">Экспертный</string>
+    <string name="account">Счет</string>
+    <string name="new_game">Новая игра</string>
 </resources>
