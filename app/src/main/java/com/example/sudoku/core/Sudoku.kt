@@ -14,7 +14,6 @@ class Sudoku() {
     }
     private val grid = mutableListOf<Cell>()
     private val matrix = Array(dim, {IntArray(dim)})
-
     private var times:Int = 0
     init {
         for (i in 0..8) {
@@ -35,8 +34,6 @@ class Sudoku() {
         }
     }
 
-
-
     private var solved = false
     var filled: Int = 0
 
@@ -51,36 +48,6 @@ class Sudoku() {
             }
         }
         return grid
-    }
-
-    private fun makeRandomGrid() {
-        for (i in 0..8) {
-            for (j in 0..8) {
-                grid[9 * i + j]= Cell(0, filltail(0))
-            }
-        }
-        var j = Random.nextInt(0, dim)
-        var new = Random.nextInt(0, dim)
-        for (n in 0..1) {
-            do {
-                new =Random.nextInt(0, dim)
-            } while(new == j)
-            j=new
-
-            for (i in 0+j until dim*(dim-1)+j step dim) {
-                grid[i].tail?.let {
-                    if (it.size > 1) {
-                        var e = -1
-                        do {
-                            val index = Random.nextInt(0, it.size )
-                            // ThreadLocalRandom.current().nextInt(list.size)
-                            e = it.elementAt(index)
-                        } while (!checkValidity(e, i / dim, i % dim))
-                        fillCell(i, e)
-                    }
-                }
-            }
-        }
     }
 
     fun makeStartGrid(solvedMatrix : Array<IntArray>, level:LEVEL): Array<IntArray>{
@@ -118,16 +85,43 @@ class Sudoku() {
         return matrix
     }
 
+    private fun makeRandomGrid() {
+        for (i in 0..8) {
+            for (j in 0..8) {
+                grid[9 * i + j]= Cell(0, filltail(0))
+            }
+        }
+        var j = Random.nextInt(0, dim)
+        var new = Random.nextInt(0, dim)
+        for (n in 0..1) {
+            do {
+                new =Random.nextInt(0, dim)
+            } while(new == j)
+            j=new
 
-    fun machineSolve() {
+            for (i in 0+j until dim*(dim-1)+j step dim) {
+                grid[i].tail?.let {
+                    if (it.size > 1) {
+                        var e = -1
+                        do {
+                            val index = Random.nextInt(0, it.size )
+                            // ThreadLocalRandom.current().nextInt(list.size)
+                            e = it.elementAt(index)
+                        } while (!checkValidity(e, i / dim, i % dim))
+                        fillCell(i, e)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun machineSolve() {
         times = 0
         print("Starting1 grid:\n\n$this")
         placeNumber(0)
         Log.i("TAG","machineSolve : Times = $times Solved = $solved")
         print(if (solved) "Solution\n\n$this" else "Unsolved\n")
     }
-
-
 
     private fun placeNumber(pos: Int) {
         if (solved) return
@@ -152,14 +146,6 @@ class Sudoku() {
             }
         }
     }
-
-    private fun MutableList<Cell>.gridFromMatrix(matrix: Array<IntArray>) : MutableList<Cell>{
-        for (pos in 0 until this.size){
-            if (matrix[pos/dim][pos%dim] == 0) this[pos].head=0
-        }
-        return this
-    }
-
 
     private fun checkValidity(v: Int, y: Int, x: Int): Boolean {
         for (i in 0 until dim) {
@@ -194,13 +180,11 @@ class Sudoku() {
         filled++
     }
 
-
     private fun filltail(head: Int): MutableSet<Int>? =
-        if (head == 0) {
+        if (head == 0)
             mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
-        } else {
+         else
             null
-        }
 
     override fun toString(): String {
         val sb = StringBuilder()
@@ -217,7 +201,6 @@ class Sudoku() {
         }
         return sb.toString()
     }
-
 
     fun main(args: Array<String>) {
         val rows = listOf(
@@ -241,11 +224,18 @@ private fun String.corect(): Boolean {
     return arrayCheck(this.toCharArray())
 }
 
-fun arrayCheck(charArray: CharArray): Boolean {
+private fun arrayCheck(charArray: CharArray): Boolean {
     charArray.sort()
     for (i in 0..8) {
         if (!Character.isDigit(charArray[i])) return false
         if (i < 8 && charArray[i] == charArray[i + 1] && charArray[i] != '0') return false
     }
     return true
+}
+
+private fun MutableList<Cell>.gridFromMatrix(matrix: Array<IntArray>) : MutableList<Cell>{
+    for (pos in 0 until this.size){
+        if (matrix[pos/ Sudoku.dim][pos% Sudoku.dim] == 0) this[pos].head=0
+    }
+    return this
 }

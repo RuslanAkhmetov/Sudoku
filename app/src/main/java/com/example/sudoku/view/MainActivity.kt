@@ -1,7 +1,6 @@
 package com.example.sudoku
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -9,16 +8,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import com.example.sudoku.view.CellView
-import com.example.sudoku.viewModel.MainViewModel
 import com.example.sudoku.core.LEVEL
 import com.example.sudoku.core.MODE
+import com.example.sudoku.view.CellView
+import com.example.sudoku.viewModel.MainViewModel
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val dim = 9
+
     private val cellsIdArray = IntArray(dim * dim)
     private val buttonsIdArray = IntArray(dim)
     private val cs = ConstraintSet()
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val digit = activityViewModel.getClue(activeCellIndex)
             if (activeCell.getMainDigitTextValue() == 0) {
                 activeCell.fillMain(digit, colorClue)
-                hideAssumption(digit, activeCellIndex)
+                hideAssumptions(digit, activeCellIndex)
             }
         }
 
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun initDigits(container: View, parent: ConstraintLayout) {
         var id: Int
         lateinit var button: Button
-        val color1 = resources.getColor(android.R.color.holo_blue_light)
+        val color1 = ContextCompat.getColor(this, android.R.color.holo_blue_light)
         val cs = ConstraintSet()
         cs.clone(parent)
         for (i in 0 until dim) {
@@ -134,14 +135,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 errorsTextView.text = (++errorsValue).toString()
             }
             activeCell.fillMain(digit, color)
-            hideAssumption(digit, activeCellIndex)
+            hideAssumptions(digit, activeCellIndex)
         } else {
             activeCell.setAssumption(digit)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun hideAssumption(digit: Int, activeCellIndex: Int) {
+    private fun hideAssumptions(digit: Int, activeCellIndex: Int) {
             val iRow = activeCellIndex / dim
             val iCol = activeCellIndex % dim
             for (i in 0 until dim) {

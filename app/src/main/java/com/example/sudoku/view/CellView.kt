@@ -2,6 +2,7 @@ package com.example.sudoku.view
 
 import android.content.Context
 import android.os.Build
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +68,7 @@ class CellView(context: Context) : ConstraintLayout(context) {
     }
 
     fun setAssumption(digit: Int, visible: Boolean) {
-        if ((getMainDigitTextValue() != 0) and (digit in 1..9)) {
+        if ((getMainDigitTextValue() == 0) and (digit in 1..9)) {
             findViewById<TextView>(idAsumptionArray[digit - 1]).visibility =
                 if (visible) View.VISIBLE
                 else View.INVISIBLE
@@ -75,7 +76,7 @@ class CellView(context: Context) : ConstraintLayout(context) {
     }
 
     fun setAssumption(digit: Int) {
-        if ((getMainDigitTextValue() != 0) and (digit in 1..9))  {
+        if ((getMainDigitTextValue() == 0) and (digit in 1..9))  {
             val visible = findViewById<TextView>(idAsumptionArray[digit - 1]).isVisible
             findViewById<TextView>(idAsumptionArray[digit - 1]).visibility =
                 if (visible) View.INVISIBLE
@@ -102,7 +103,8 @@ class CellView(context: Context) : ConstraintLayout(context) {
                 idAsumptionArray[i * dim + j] = id
                 textView.id = id
                 textView.text = (i * dim + j + 1).toString()
-                textView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                textView.setAutoSizeTextTypeUniformWithConfiguration(6,20,
+                    1,TypedValue.COMPLEX_UNIT_SP)
                 lp = LayoutParams(ConstraintSet.MATCH_CONSTRAINT, ConstraintSet.MATCH_CONSTRAINT)
                 this.addView(textView, lp)
 
